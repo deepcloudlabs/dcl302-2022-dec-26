@@ -14,3 +14,5 @@ numbers.forEach(printElement)
 // 3. Event-Driven Programming
 // 4. Object-Based Programming
 // 5. Object-Oriented Programming
+
+// Node.js: JS Engine (v8), Single Execution Thread -> Event Queue: Event Loop

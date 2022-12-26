@@ -1,7 +1,10 @@
 {
   "name": "js-programming",
   "version": "1.0.0",
+  "type": "module",
   "dependencies": {
-    "mathjs": "^11.5.0"
+    "mathjs": "^11.5.0",
+    "ws": "^8.11.0",
+    "node-fetch": "^3.3.0"
   }
 }
