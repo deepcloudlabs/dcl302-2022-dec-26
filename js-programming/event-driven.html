@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Event-Driven Programming</title>
+    <script>
+        window.onload = () => {
+            setInterval(()=>{
+                console.log("Timeout Event has occurred.");
+            }, 2_000);
+            const btn1 = document.querySelector("#btn1");
+            btn1.addEventListener('click', (event)=>{
+               console.log("Button is clicked!");
+            });
+            const input1 = document.querySelector("#input1");
+            input1.addEventListener('change', (event)=>{
+               console.log(`New value: ${event.target.value}`);
+            });
+
+        }
+    </script>
+</head>
+<body>
+    <button id="btn1">Click Me!</button>
+    <p></p>
+    <input type="text" id="input1">
+</body>
+</html>
