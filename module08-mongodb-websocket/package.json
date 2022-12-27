@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "service": "node server.js"
+    "service": "set UV_THREADPOOL_SIZE=64 & node server.js"
   },
   "dependencies": {
     "ws": "^8.11.0",
