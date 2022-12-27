@@ -1,0 +1,11 @@
+{
+  "name": "module05-nodejs.programming",
+  "version": "1.0.0",
+  "main": "middleware.js",
+  "scripts": {
+    "middlware": "nodemon middleware.js"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
