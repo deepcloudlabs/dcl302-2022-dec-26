@@ -87,6 +87,27 @@ api.get("/hr/api/v1/employees/:identity", (req, res) => {
 });
 //endregion
 
+
+//region GET /hr/api/v1/employees?page=3&size=15
+api.get("/hr/api/v1/employees", (req, res) => {
+    const page = req.query.page || 0;
+    const limit = req.query.size || 10;
+    const skip = page * limit;
+    Employee.find(
+        {},
+        {},
+        {skip, limit},
+        (err, employees) => {
+            res.set("Content-Type", "application/json");
+            if (err) {
+                res.status(400).send({"status": err});
+            } else {
+                res.status(200).send(employees);
+            }
+        })
+});
+//endregion
+
 // http://localhost:8100/api-docs
 api.listen(8100, () => {
     console.log("HR Application is running...REST Api serving at port 8100");
