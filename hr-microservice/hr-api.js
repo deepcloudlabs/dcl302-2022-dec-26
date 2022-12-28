@@ -1,8 +1,8 @@
 const {api} = require("./hr-api-config");
 
 //region MongoDB and Mongoose
-const {set, connect, Schema, model} = require("mongoose");
-const {tcKimlikNoValidator, ibanValidator} = require("./validation");
+const {set, connect, Schema, model, Types} = require("mongoose");
+const {tcKimlikNoValidator, ibanValidator, NO_IMAGE} = require("./validation");
 set('strictQuery', true);
 connect("mongodb://127.0.0.1:27017/hrdb", {
         "socketTimeoutMS": 0,
@@ -10,14 +10,6 @@ connect("mongodb://127.0.0.1:27017/hrdb", {
         "useUnifiedTopology": true
     }, () => console.log("Connected to MongoDB...")
 );
-const departmentSchema = new Schema({
-    "name": {
-        type: String,
-        required: false,
-        default: "IT",
-        enum: ["IT", "Sales", "Finance", "HR"]
-    }
-});
 
 const employeeSchema = new Schema({
     "_id": Schema.Types.ObjectId,
@@ -33,8 +25,8 @@ const employeeSchema = new Schema({
     },
     "photo": {
         type: String,
-        required: false
-        // maxLength: 128000
+        required: false,
+        default: NO_IMAGE
     },
     "salary": {
         type: Number,
@@ -47,10 +39,31 @@ const employeeSchema = new Schema({
         required: true,
         validate: [ibanValidator, "You must provide a valid iban!"]
     },
-    "department": departmentSchema
+    "department": {
+        type: String,
+        required: false,
+        default: "IT",
+        enum: ["IT", "Sales", "Finance", "HR"]
+    }
 });
 
 const Employee = model("employees",employeeSchema);
+//endregion
+
+//region REST API
+api.post("/hr/api/v1/employees", (req,res) => {
+    const employeeBody = req.body;
+    employeeBody._id = new Types.ObjectId();
+    const employee = new Employee(employeeBody);
+    employee.save((err,result)=>{
+        res.set("Content-Type", "application/json");
+        if (err){
+            res.status(400).send({"status": err});
+        } else {
+            res.status(200).send({"status": "OK"});
+        }
+    })
+});
 //endregion
 
 // http://localhost:8100/api-docs
