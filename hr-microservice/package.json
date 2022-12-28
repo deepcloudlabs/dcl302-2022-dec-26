@@ -4,7 +4,8 @@
   "description": "HR Application",
   "main": "hr-api.js",
   "scripts": {
-    "hr-api": "nodemon hr-api.js"
+    "hr-api": "nodemon hr-api.js",
+    "hr-api-client": "node client/hr-websocket-client.js"
   },
   "dependencies": {
     "nodemon": "^2.0.20",

@@ -36,6 +36,11 @@ const employeeSchema = new Schema({
         min: 2000,
         default: 2000
     },
+    "birthYear": {
+        type: Number,
+        required: true,
+        min: 1950
+    },
     "iban": {
         type: String,
         required: true,
@@ -69,6 +74,13 @@ api.post("/hr/api/v1/employees", (req, res) => {
             res.status(400).send({"status": err});
         } else {
             res.status(200).send({"status": "OK"});
+            const empHiredEvent = {
+                eventType: "EMPLOYEE_HIRED_EVENT",
+                eventData: employeeBody
+            }
+            sessions.forEach( session => {
+               session.emit("hr-events",JSON.stringify(empHiredEvent));
+            });
         }
     })
 });
@@ -125,6 +137,16 @@ api.delete("/hr/api/v1/employees/:identity", (req, res) => {
                 res.status(400).send({"status": err});
             } else if (emp) {
                 res.status(200).send(emp);
+                let {_doc} = {...emp};
+                let {photo,_id,__v,...eventData} = _doc;
+                console.log(eventData);
+                const empFiredEvent = {
+                    eventType: "EMPLOYEE_FIRED_EVENT",
+                    eventData
+                }
+                sessions.forEach( session => {
+                    session.emit("hr-events",JSON.stringify(empFiredEvent));
+                });
             } else {
                 res.status(404).send({"status": "NOT FOUND"});
             }
@@ -144,6 +166,7 @@ function updateEmployee(req, res) {
     Employee.updateOne(
         {"identityNo": identity},
         {$set: updatableEmployee},
+        { "upsert": false},
         (err, result) => {
             res.set("Content-Type", "application/json");
             if (err) {
@@ -165,7 +188,21 @@ api.patch("/hr/api/v1/employees/:identity", (req, res) => {
     updateEmployee(req, res);
 });
 //endregion
+const {Server} = require("socket.io");
+const io = new Server(8200, {cors: {origin: "*"}});
+const sessions = [];
 
+io.on("connection", session => {
+    console.log(`New websocket connection is created: ${session.id}`);
+    sessions.push(session);
+    io.on("disconnect", () => {
+        console.log(`Websocket connection is closed: ${session.id}`);
+        sessions.splice(0,
+                        sessions.length,
+                        sessions.filter( _session => _session.id !== session.id)
+        );
+    });
+});
 // http://localhost:8100/api-docs
 api.listen(8100, () => {
     console.log("HR Application is running...REST Api serving at port 8100");
