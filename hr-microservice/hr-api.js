@@ -87,7 +87,6 @@ api.get("/hr/api/v1/employees/:identity", (req, res) => {
 });
 //endregion
 
-
 //region GET /hr/api/v1/employees?page=3&size=15
 api.get("/hr/api/v1/employees", (req, res) => {
     const page = req.query.page || 0;
@@ -108,6 +107,24 @@ api.get("/hr/api/v1/employees", (req, res) => {
 });
 //endregion
 
+//region DELETE /hr/api/v1/employees/11111111110
+api.delete("/hr/api/v1/employees/:identity", (req, res) => {
+    const identity = req.params.identity;
+    Employee.findOneAndDelete(
+        {"identityNo": identity},
+        {},
+        (err, emp) => {
+            res.set("Content-Type", "application/json");
+            if (err) {
+                res.status(400).send({"status": err});
+            } else if (emp) {
+                res.status(200).send(emp);
+            } else {
+                res.status(404).send({"status": "NOT FOUND"});
+            }
+        })
+});
+//endregion
 // http://localhost:8100/api-docs
 api.listen(8100, () => {
     console.log("HR Application is running...REST Api serving at port 8100");
