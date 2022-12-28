@@ -1,0 +1,24 @@
+{
+  "name": "hr-microservice",
+  "version": "1.0.0",
+  "description": "HR Application",
+  "main": "hr-api.js",
+  "scripts": {
+    "hr-api": "nodemon hr-api.js"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.20",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.1",
+    "body-parser": "^1.20.1",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.5.4",
+    "socket.io-client": "^4.5.4",
+    "swagger-ui-express": "^4.6.0",
+    "cors": "^2.8.5",
+    "kafkajs": "^2.2.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
