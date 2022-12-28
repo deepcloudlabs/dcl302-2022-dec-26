@@ -1,0 +1,17 @@
+{
+  "name": "rabbitmq-websocket-nodejs-application",
+  "version": "1.0.0",
+  "description": "",
+  "main": "binance-websocket-client-rabbitmq.js",
+  "scripts": {
+    "producer": "node binance-websocket-client-rabbitmq.js",
+    "consumer": "node trades-rabbit-consumer.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "ws": "^8.11.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
