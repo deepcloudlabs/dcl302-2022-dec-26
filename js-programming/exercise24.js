@@ -6,7 +6,7 @@ const symbols = await fetch(BINANCE_TICKER_PRICE_URL)
     .then(tickers => tickers.map(ticker => ticker.symbol));
 const tickers = [];
 console.log("Started sending request...")
-for (const symbol of symbols.splice(0,20)) {
+for (const symbol of symbols.splice(0, 20)) {
     const ticker = fetch(`${BINANCE_TICKER_PRICE_URL}?symbol=${symbol}`)
         .then(res => res.json());
     tickers.push(ticker);

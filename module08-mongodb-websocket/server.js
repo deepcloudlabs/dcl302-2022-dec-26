@@ -31,7 +31,6 @@ const tradeEvent = {
 };
 set('strictQuery', true);
 connect("mongodb://127.0.0.1:27017/binance", {
-        "useNewUrlParser": true,
         "socketTimeoutMS": 0,
         "keepAlive": true,
         "useUnifiedTopology": true

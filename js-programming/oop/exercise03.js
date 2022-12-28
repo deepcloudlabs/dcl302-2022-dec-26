@@ -1,7 +1,7 @@
 // OOP: Class & Object -> encapsulation, information hiding?
 // 1. function
 // 3. function + information hiding
-let Customer = (function(_identity, _firstName, _lastName, _email, _sms){
+let Customer = (function (_identity, _firstName, _lastName, _email, _sms) {
     let identity = _identity;
     let firstName = _firstName;
     let lastName = _lastName;
@@ -9,16 +9,16 @@ let Customer = (function(_identity, _firstName, _lastName, _email, _sms){
     let sms = _sms;
 
     return {
-        greetCustomer(){
+        greetCustomer() {
             console.log(`Hello, ${lastName}!`);
         },
-        getIdentity(){
+        getIdentity() {
             return identity;
         },
-        getEmail(){
+        getEmail() {
             return email;
         },
-        setEmail(_email){
+        setEmail(_email) {
             email = _email;
         }
     }

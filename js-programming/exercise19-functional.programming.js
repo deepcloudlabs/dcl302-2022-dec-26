@@ -7,10 +7,10 @@ for (let number of numbers) {
     }
 }
 const ifEven = n => n % 2 === 0;
-const to_cube =  u => u ** 3
-const add = (accumulator,evenNumber) => accumulator+evenNumber
+const to_cube = u => u ** 3
+const add = (accumulator, evenNumber) => accumulator + evenNumber
 console.log(`sum: ${sum}`);
 sum = numbers.filter(ifEven)
-             .map(to_cube)
-             .reduce(add, 0);
+    .map(to_cube)
+    .reduce(add, 0);
 console.log(`sum: ${sum}`);

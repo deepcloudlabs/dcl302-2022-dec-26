@@ -22,3 +22,4 @@ function drawMultiple(max, size, column) {
 }
 
 exports.drawMultiple = drawMultiple
+exports.draw = draw

@@ -6,6 +6,7 @@ class Customer {
     #lastName;
     #email;
     #sms;
+
     constructor(identity, firstName, lastName, email, sms) {
         this.#identity = identity;
         this.#firstName = firstName;
@@ -14,17 +15,17 @@ class Customer {
         this.#sms = sms;
     }
 
-    get identity(){
+    get identity() {
         console.log("get identity() is working...")
         return this.#identity;
     }
 
-    get email(){
+    get email() {
         console.log("get email() is working...")
         return this.#email;
     }
 
-    set email(email){
+    set email(email) {
         console.log("set email() is working...")
         this.#email = email;
     }
