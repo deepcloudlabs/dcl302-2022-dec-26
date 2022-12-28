@@ -21,6 +21,7 @@ const employeeSchema = new Schema({
     "identityNo": {
         type: String,
         required: true,
+        unique: true,
         validate: [tcKimlikNoValidator, "You must provide a valid identity no!"]
     },
     "photo": {
@@ -37,6 +38,7 @@ const employeeSchema = new Schema({
     "iban": {
         type: String,
         required: true,
+        unique: true,
         validate: [ibanValidator, "You must provide a valid iban!"]
     },
     "department": {
@@ -47,22 +49,41 @@ const employeeSchema = new Schema({
     }
 });
 
-const Employee = model("employees",employeeSchema);
+const Employee = model("employees", employeeSchema);
 //endregion
 
-//region REST API
-api.post("/hr/api/v1/employees", (req,res) => {
+//region POST /hr/api/v1/employees
+api.post("/hr/api/v1/employees", (req, res) => {
     const employeeBody = req.body;
     employeeBody._id = new Types.ObjectId();
     const employee = new Employee(employeeBody);
-    employee.save((err,result)=>{
+    employee.save((err, result) => {
         res.set("Content-Type", "application/json");
-        if (err){
+        if (err) {
             res.status(400).send({"status": err});
         } else {
             res.status(200).send({"status": "OK"});
         }
     })
+});
+//endregion
+
+//region GET /hr/api/v1/employees/11111111110
+api.get("/hr/api/v1/employees/:identity", (req, res) => {
+    const identity = req.params.identity;
+    Employee.findOne(
+        {"identityNo": identity},
+        {},
+        (err, emp) => {
+            res.set("Content-Type", "application/json");
+            if (err) {
+                res.status(400).send({"status": err});
+            } else if (emp) {
+                res.status(200).send(emp);
+            } else {
+                res.status(404).send({"status": "NOT FOUND"});
+            }
+        })
 });
 //endregion
 
