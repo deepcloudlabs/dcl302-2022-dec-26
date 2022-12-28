@@ -1,4 +1,5 @@
 const {api} = require("./hr-api-config");
+const updatableFields = ["photo", "salary", "iban", "fullname", "department", "fulltime"];
 
 //region MongoDB and Mongoose
 const {set, connect, Schema, model, Types} = require("mongoose");
@@ -46,6 +47,11 @@ const employeeSchema = new Schema({
         required: false,
         default: "IT",
         enum: ["IT", "Sales", "Finance", "HR"]
+    },
+    "fulltime": {
+        type: Boolean,
+        required: false,
+        default: true
     }
 });
 
@@ -124,7 +130,42 @@ api.delete("/hr/api/v1/employees/:identity", (req, res) => {
             }
         })
 });
+
 //endregion
+
+function updateEmployee(req, res) {
+    const identity = req.params.identity;
+    const employeeBody = req.body;
+    const updatableEmployee = {};
+    for (const [field, value] of Object.entries(employeeBody)) {
+        if (updatableFields.includes(field))
+            updatableEmployee[field] = value;
+    }
+    Employee.updateOne(
+        {"identityNo": identity},
+        {$set: updatableEmployee},
+        (err, result) => {
+            res.set("Content-Type", "application/json");
+            if (err) {
+                res.status(400).send({"status": err});
+            } else {
+                res.status(200).send({"status": result});
+            }
+        })
+}
+
+//region PUT /hr/api/v1/employees/11111111110
+api.put("/hr/api/v1/employees/:identity", (req, res) => {
+    updateEmployee(req, res);
+});
+//endregion
+
+//region PATCH /hr/api/v1/employees/11111111110
+api.patch("/hr/api/v1/employees/:identity", (req, res) => {
+    updateEmployee(req, res);
+});
+//endregion
+
 // http://localhost:8100/api-docs
 api.listen(8100, () => {
     console.log("HR Application is running...REST Api serving at port 8100");
