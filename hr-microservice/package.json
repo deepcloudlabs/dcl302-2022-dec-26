@@ -5,7 +5,8 @@
   "main": "hr-api.js",
   "scripts": {
     "hr-api": "nodemon hr-api.js",
-    "hr-api-client": "node client/hr-websocket-client.js"
+    "hr-api-websocket-client": "node client/hr-websocket-client.js",
+    "hr-kafka-consumer": "node client/hr-kafka-consumer.js"
   },
   "dependencies": {
     "nodemon": "^2.0.20",

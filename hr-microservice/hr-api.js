@@ -63,26 +63,52 @@ const employeeSchema = new Schema({
 const Employee = model("employees", employeeSchema);
 //endregion
 
+//region KAFKA CONFIGURATION
+const {Kafka, Partitioners} = require("kafkajs");
+const kafka = new Kafka({
+    clientId: "hr-backend-producer",
+    brokers: ["127.0.0.1:9092"]
+});
+const producer = kafka.producer({
+    createPartitioner: Partitioners.LegacyPartitioner
+});
+
+producer.connect()
+    .then(() => console.log("Connected to the Kafka broker successfully."))
+    .catch(err => console.error(err));
+
+//endregion
+
 //region POST /hr/api/v1/employees
 api.post("/hr/api/v1/employees", (req, res) => {
     const employeeBody = req.body;
     employeeBody._id = new Types.ObjectId();
     const employee = new Employee(employeeBody);
     employee.save((err, result) => {
-        res.set("Content-Type", "application/json");
-        if (err) {
-            res.status(400).send({"status": err});
-        } else {
-            res.status(200).send({"status": "OK"});
-            const empHiredEvent = {
-                eventType: "EMPLOYEE_HIRED_EVENT",
-                eventData: employeeBody
+            res.set("Content-Type", "application/json");
+            if (err) {
+                res.status(400).send({"status": err});
+            } else {
+                res.status(200).send({"status": "OK"});
+                const empHiredEvent = {
+                    eventType: "EMPLOYEE_HIRED_EVENT",
+                    eventData: employeeBody
+                }
+                let empHiredEventAsJson = JSON.stringify(empHiredEvent);
+                sessions.forEach(session => {
+                    session.emit("hr-events", empHiredEventAsJson);
+                });
+                producer.send({
+                    topic: "hr-events",
+                    messages: [
+                        {"key": employeeBody.identityNo, "value": empHiredEventAsJson}
+                    ]
+                }).then(() => {
+                    console.log("Event has been successfully sent.")
+                }).catch(err => console.error(err));
             }
-            sessions.forEach( session => {
-               session.emit("hr-events",JSON.stringify(empHiredEvent));
-            });
         }
-    })
+    )
 });
 //endregion
 
@@ -138,15 +164,24 @@ api.delete("/hr/api/v1/employees/:identity", (req, res) => {
             } else if (emp) {
                 res.status(200).send(emp);
                 let {_doc} = {...emp};
-                let {photo,_id,__v,...eventData} = _doc;
+                let {photo, _id, __v, ...eventData} = _doc;
                 console.log(eventData);
                 const empFiredEvent = {
                     eventType: "EMPLOYEE_FIRED_EVENT",
                     eventData
                 }
-                sessions.forEach( session => {
-                    session.emit("hr-events",JSON.stringify(empFiredEvent));
+                let empFiredEventAsJson = JSON.stringify(empFiredEvent);
+                sessions.forEach(session => {
+                    session.emit("hr-events", empFiredEventAsJson);
                 });
+                producer.send({
+                    topic: "hr-events",
+                    messages: [
+                        {"key": identity, "value": empFiredEventAsJson}
+                    ]
+                }).then(() => {
+                    console.log("Event has been successfully sent.")
+                }).catch(err => console.error(err));
             } else {
                 res.status(404).send({"status": "NOT FOUND"});
             }
@@ -166,7 +201,7 @@ function updateEmployee(req, res) {
     Employee.updateOne(
         {"identityNo": identity},
         {$set: updatableEmployee},
-        { "upsert": false},
+        {"upsert": false},
         (err, result) => {
             res.set("Content-Type", "application/json");
             if (err) {
@@ -198,8 +233,8 @@ io.on("connection", session => {
     io.on("disconnect", () => {
         console.log(`Websocket connection is closed: ${session.id}`);
         sessions.splice(0,
-                        sessions.length,
-                        sessions.filter( _session => _session.id !== session.id)
+            sessions.length,
+            sessions.filter(_session => _session.id !== session.id)
         );
     });
 });
