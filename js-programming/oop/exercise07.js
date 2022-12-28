@@ -23,6 +23,6 @@ for (let p in jack) { // reflection
     }
 }
 
-for (let [p,v] of Object.entries(jack)){
+for (let [p, v] of Object.entries(jack)) {
     console.log(`jack.${p}: ${v}`);
 }

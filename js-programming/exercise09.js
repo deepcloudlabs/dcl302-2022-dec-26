@@ -21,6 +21,6 @@ for (let [i, number] of numbers.entries()) {
     console.log(`numbers[${i}]=${number}`);
 }
 // internal loop #5
-numbers.forEach(function(number,i){
+numbers.forEach(function (number, i) {
     console.log(`numbers[${i}]=${number}`);
 });

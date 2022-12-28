@@ -24,13 +24,13 @@ class Employee {
     }
 }
 
-const jack = new Employee("1","jack bauer", 100_000,
+const jack = new Employee("1", "jack bauer", 100_000,
     "tr1", "IT");
 console.log(jack.salary)
 jack.increaseSalary(); // increaseSalary(jack)
 console.log(jack.salary)
 setInterval(jack.increaseSalary, 3_000)
-setInterval(function(){
+setInterval(function () {
     console.log(jack.salary);
 }, 2_000)
 

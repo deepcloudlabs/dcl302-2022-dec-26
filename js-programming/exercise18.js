@@ -11,8 +11,8 @@ function gun(x = 3, y = 5, z = 7) {
 const fun = function (x, y, z) {
     if (arguments.length !== 3)
         throw "You must provide exactly 3-params.";
-    for (let [argument,i] of arguments)
-        console.log(argument+","+i)
+    for (let [argument, i] of arguments)
+        console.log(argument + "," + i)
     return x * y + z;
 }
 

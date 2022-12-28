@@ -1,11 +1,11 @@
 class Employee {
-    constructor({identity, fullname, salary, iban, department,photo,birthYear}) {
+    constructor({identity, fullname, salary, iban, department, photo, birthYear}) {
         this.identity = identity;
         this.fullname = fullname;
         this.salary = salary;
         this.iban = iban;
         this.department = department;
-        this.photo= photo;
+        this.photo = photo;
         this.birthYear = birthYear;
     }
 
