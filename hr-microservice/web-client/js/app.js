@@ -1,4 +1,4 @@
-let hrViewModel= new HrViewModel();
+let hrViewModel = new HrViewModel();
 $(
     () => {
         ko.applyBindings(hrViewModel);

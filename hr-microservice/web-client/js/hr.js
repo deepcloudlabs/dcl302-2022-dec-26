@@ -53,15 +53,15 @@ class HrViewModel {
             this.socket.on('hr-events', (frame) => {
                 const event = JSON.parse(frame);
                 const emp = event.eventData;
-                switch(event.eventType){
+                switch (event.eventType) {
                     case "EMPLOYEE_HIRED_EVENT":
-                            this.employees.push(emp);
-                            toastr.success(`${emp.fullname} is hired!`);
+                        this.employees.push(emp);
+                        toastr.success(`${emp.fullname} is hired!`);
                         break;
                     case "EMPLOYEE_FIRED_EVENT":
-                            let filteredEmployees = this.employees().filter(e => e.identityNo != emp.identityNo);
-                            this.employees(filteredEmployees);
-                            toastr.success(`${emp.fullname} is fired!`);
+                        let filteredEmployees = this.employees().filter(e => e.identityNo != emp.identityNo);
+                        this.employees(filteredEmployees);
+                        toastr.success(`${emp.fullname} is fired!`);
                         break;
                 }
             });

@@ -21,5 +21,5 @@ Object.keys(jack).forEach(console.log)
 console.log("Values are")
 Object.values(jack).forEach(console.log)
 console.log("Entries are")
-Object.entries(jack).forEach( entry => console.log(`${entry[0]}: ${entry[1]}`))
+Object.entries(jack).forEach(entry => console.log(`${entry[0]}: ${entry[1]}`))
 
